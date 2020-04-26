@@ -1,0 +1,10 @@
+{
+  "name": "peabody-server",
+  "version": "1.0.0",
+  "main": "app.ts",
+  "license": "MIT",
+  "dependencies": {
+    "koa": "^2.11.0",
+    "koa-router": "^8.0.8"
+  }
+}
