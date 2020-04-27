@@ -69,7 +69,6 @@ abstract class BaseLogger {
 
         for (let i=0; i < a.length; i++) {
             let value: string
-
             if (
                 typeof a[i] === "string" ||
                 a[i] instanceof Date ||
@@ -89,7 +88,7 @@ abstract class BaseLogger {
             out += i === a.length - 1 ? value : value + " "
         }
 
-        out = `${moment()} ${out}`
+        out = `${moment().format()} ${out}`
         console.log(color(out).bold)
     }
 }

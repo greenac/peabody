@@ -1,6 +1,7 @@
 import Router, { RouterContext } from "koa-router"
 import { getActors } from "../handlers/actor"
 import logger from "../logger/logger"
+import jsonResponse from "../utils/json-response"
 
 
 const router = new Router({ prefix: "/api/actor" })
@@ -13,14 +14,13 @@ router.get("/", async (ctx: RouterContext, next: Function) => {
     actors = await getActors()
   } catch (error) {
     logger.error("/api/actor::Failed to retrieve actors with error:", error)
-    ctx.status = 500
+    jsonResponse(ctx, 500)
     return next()
   }
 
   logger.log("Got data from artemis for all actors:", actors)
 
-  ctx.status = 200
-  ctx.body = actors
+  jsonResponse(ctx, 200, { actors })
 
   next()
 })
