@@ -15,7 +15,7 @@ const setJsonResponse = (
   message?: string,
 ): void => {
   const res: IJsonResponse = { status, payload, message, error }
-  
+
   ctx.status = status
   ctx.body = res
 }
