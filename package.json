@@ -39,5 +39,5 @@
     ]
   },
   "devDependencies": {},
-  "proxy": "http://localhost:9122"
+  "proxy": "http://localhost:9123"
 }
