@@ -1,8 +1,10 @@
 import logger from "../logger/logger"
 import { IActor, Actor, IActorData } from "../models/actor"
+import { IMovieData, IMovie, Movie } from "../models/movie"
 
 enum ApiEndpoints {
-  AllActors = "/api/actor"
+  AllActors = "/api/actor",
+  UnknownMovies = "/api/movie/unknown",
 }
 
 // TODO: add more values
@@ -48,5 +50,19 @@ export const apiGetAllActors = async (): Promise<IActor[]> => {
   }
 
   console.log("Got actors from api:", response)
+
   return response.payload.actors.map((a: IActorData) => new Actor(a))
 }
+
+export const apiGetUnknownMovies = async (): Promise<IMovie[]> => {
+  const response = await apiGet(ApiEndpoints.UnknownMovies)
+  if (response.status !== ApiResponseCodes.OK) {
+    // TODO: add comprehensive error -> ui handling
+    throw new Error(`All Actors ${response.status}`)
+  }
+
+  console.log("Got unknown movies from api:", response)
+
+  return response.payload.movies.map((m: IMovieData) => new Movie(m))
+}
+

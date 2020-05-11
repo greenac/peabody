@@ -4,16 +4,15 @@ import logger from "../logger/logger"
 
 
 export enum ArtemisEndpoint {
-  AllActors = "/api/all-actors",
-  Actor = "/api/actor"
+  AllActors = "/api/actor",
+  Actor = "/api/actor",
+  UnknownMovies = "/api/movie/unknown",
 }
 
 export enum ArtemisModelType {
   Actor,
   Model,
 }
-
-logger.debug("proxy base url:", proxyConfig.getUrl())
 
 const ax: AxiosInstance = axios.create({
   baseURL: proxyConfig.getUrl(),
