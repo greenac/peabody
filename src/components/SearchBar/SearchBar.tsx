@@ -2,7 +2,6 @@ import React, {ReactPropTypes, useState} from "react"
 import { Form } from "semantic-ui-react"
 
 interface ISearchBarProps {
-  label: string
   placeholder: string
   children: string
   change?: (input: string) => void
@@ -11,7 +10,7 @@ interface ISearchBarProps {
 
 const SearchBar = (props: ISearchBarProps) => {
 
-  const { label, placeholder, change, submit } = props
+  const { placeholder, change, submit } = props
 
   const [ text, setText ] = useState("")
 
@@ -36,7 +35,6 @@ const SearchBar = (props: ISearchBarProps) => {
       <Form.Input
         fluid
         id='form-subcomponent-shorthand-input-first-name'
-        label={label}
         placeholder={placeholder}
         onChange={inputChanged}
       />

@@ -1,10 +1,10 @@
-import React, { useState } from "react"
-import { IActor } from "../../models/actor"
 import logger from "../../logger/logger"
-import { apiGetAllActors } from "../../handlers/api"
 import ActorList from "./ActorList"
 import SearchBar from "../SearchBar/SearchBar"
-import Button from "semantic-ui-react"
+import React, { useState } from "react"
+import { IActor } from "../../models/actor"
+import { apiGetAllActors } from "../../handlers/api"
+import { Button } from "semantic-ui-react"
 
 const ActorPane = () => {
   const [ actors, setActors ] = useState<IActor[]>([])
@@ -30,8 +30,8 @@ const ActorPane = () => {
 
   return (
     <div className="actor-pane">
-      <SearchBar placeholder={"search"} label={"hello"} change={searchTextChanged} submit={searchTextSubmitted}>something</SearchBar>
-      <button onClick={getActors}>Get dem Actors</button>
+      <SearchBar placeholder={"search..."} change={searchTextChanged} submit={searchTextSubmitted}>something</SearchBar>
+      <Button onClick={getActors}>Get dem Actors</Button>
       <ActorList actors={actors} />
     </div>
   )
