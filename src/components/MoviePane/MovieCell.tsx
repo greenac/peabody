@@ -1,7 +1,7 @@
 import React, { MouseEvent } from "react"
-import "semantic-ui-css/semantic.min.css"
-import { List } from "semantic-ui-react"
+import { List, Grid, GridColumn } from "semantic-ui-react"
 import { IMovie } from "../../models/movie"
+import MovieModal from "./MovieModal"
 
 interface IMovieCellProps {
   movie: IMovie
@@ -17,10 +17,19 @@ const MovieCell = (props: IMovieCellProps) => {
 
   return (
     <List.Item key={movie.id} onClick={clicked}>
-      <List.Icon name='github' size='large' verticalAlign='middle' />
+      <List.Icon name="film" size="large" verticalAlign='middle' />
       <List.Content>
         <List.Header as='a'>{movie.identifier}</List.Header>
-        <List.Description as='a'>{movie.path}</List.Description>
+        <List.Description as='a'>
+            <Grid columns={2}>
+              <GridColumn width={6}>
+                {movie.path}
+              </GridColumn>
+              <GridColumn>
+                <MovieModal movie={movie}></MovieModal>
+              </GridColumn>
+            </Grid>
+        </List.Description>
       </List.Content>
     </List.Item>
   )

@@ -12,24 +12,13 @@ interface IMovieListProps {
 const MovieList = (props: IMovieListProps) => {
   const { movies, onClick } = props
 
-  const mvIds = new Set()
-
   const clicked = (id: string): void => {
     onClick(id)
   }
 
   return (
-    <List divided relaxed>
-      { movies.map((m: IMovie, i: number) => {
-        console.log(m.id)
-        if (mvIds.has(m.id)) {
-          console.log("ALREADY HAS ID:", m.id)
-        }
-
-        console.log("Adding movie:", m.id, "counter:", i, m.name)
-
-        mvIds.add(m.id)
-
+    <List relaxed>
+      { movies.map((m: IMovie) => {
         return <MovieCell movie={m} onClick={clicked} />
       })}
     </List>
