@@ -12,9 +12,11 @@ export interface IMovieData {
   actorIds: string[]
 }
 
-export interface IMovie extends IMovieData {}
+export interface IMovie extends IMovieData {
+  basePath: () => string
+}
 
-export class Movie implements IMovieData {
+export class Movie implements IMovie {
   public id: string
   public identifier: string
   public name: string
@@ -26,7 +28,7 @@ export class Movie implements IMovieData {
   public repeatNum: number
   public actorIds: string[]
 
-  constructor(movie: IMovie) {
+  constructor(movie: IMovieData) {
     this.id = movie.id
     this.identifier = movie.identifier
     this.name = movie.name
@@ -37,5 +39,10 @@ export class Movie implements IMovieData {
     this.meta = movie.meta
     this.repeatNum = movie.repeatNum
     this.actorIds = movie.actorIds
+  }
+
+  basePath(): string {
+    const parts = this.path.split("/")
+    return parts.slice(0, parts.length - 1).join("/")
   }
 }

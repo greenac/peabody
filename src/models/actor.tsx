@@ -1,5 +1,6 @@
 
 export interface IActorData {
+  id: string
   identifier: string
   firstName: string
   lastName: string
@@ -11,12 +12,14 @@ export interface IActor extends IActorData {
 }
 
 export class Actor implements IActor {
+  public id: string
   public firstName: string
   public lastName: string
   public middleName: string
   public identifier: string
 
   constructor(actor: IActorData) {
+    this.id = actor.id
     this.firstName = actor.firstName
     this.lastName = actor.lastName
     this.middleName = actor.middleName

@@ -3,7 +3,7 @@ import ActorList from "./ActorList"
 import SearchBar from "../SearchBar/SearchBar"
 import React, { useState } from "react"
 import { IActor } from "../../models/actor"
-import { apiGetAllActors } from "../../handlers/api"
+import { apiGetAllActors } from "../../handlers/api/actor"
 import { Button } from "semantic-ui-react"
 
 const ActorPane = () => {

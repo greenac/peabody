@@ -2,7 +2,7 @@ import logger from "../../logger/logger"
 import MovieList from "./MovieList"
 import React, { useState, useEffect } from "react"
 import { IMovie } from "../../models/movie"
-import { apiGetUnknownMovies } from "../../handlers/api"
+import { apiGetUnknownMovies } from "../../handlers/api/movie"
 
 const MoviePane = () => {
   const [ movies, setMovies ] = useState<IMovie[]>([])
@@ -26,13 +26,13 @@ const MoviePane = () => {
     }
   }
 
-  const movieClicked = (id: string): void => {
-    console.log("Movie clicked:", id)
+  const refreshMovies = async (): Promise<void> => {
+    await getUnknownMovies()
   }
 
   return (
     <div className="actor-pane">
-      <MovieList movies={movies} onClick={movieClicked} />
+      <MovieList movies={movies} onModalClose={refreshMovies}/>
     </div>
   )
 }
