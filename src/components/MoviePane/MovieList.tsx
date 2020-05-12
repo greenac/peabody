@@ -1,27 +1,23 @@
-import React, { MouseEvent } from "react"
-import "semantic-ui-css/semantic.min.css"
+import React from "react"
 import MovieCell from "./MovieCell"
 import { List } from "semantic-ui-react"
 import { IMovie } from "../../models/movie"
 
 interface IMovieListProps {
   movies: IMovie[]
-  onClick: (id :string) => void
+  onModalClose: () => void
 }
 
 const MovieList = (props: IMovieListProps) => {
-  const { movies, onClick } = props
-
-  const clicked = (id: string): void => {
-    onClick(id)
-  }
+  const { movies, onModalClose } = props
 
   return (
-    <List relaxed>
-      { movies.map((m: IMovie) => {
-        return <MovieCell movie={m} onClick={clicked} />
-      })}
-    </List>
+    <List relaxed>{
+      movies.map((m: IMovie) => {
+      return (
+        <MovieCell movie={m} onModalClose={onModalClose}/>
+      )
+    }) }</List>
   )
 }
 

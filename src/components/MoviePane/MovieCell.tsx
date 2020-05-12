@@ -5,28 +5,24 @@ import MovieModal from "./MovieModal"
 
 interface IMovieCellProps {
   movie: IMovie
-  onClick: (id :string) => void
+  onModalClose: () => void
 }
 
 const MovieCell = (props: IMovieCellProps) => {
-  const { movie, onClick } = props
-
-  const clicked = (evt: MouseEvent): void => {
-    onClick(movie.id)
-  }
+  const { movie, onModalClose } = props
 
   return (
-    <List.Item key={movie.id} onClick={clicked}>
+    <List.Item key={movie.id}>
       <List.Icon name="film" size="large" verticalAlign='middle' />
       <List.Content>
-        <List.Header as='a'>{movie.identifier}</List.Header>
-        <List.Description as='a'>
+        <List.Header>{movie.name}</List.Header>
+        <List.Description>
             <Grid columns={2}>
-              <GridColumn width={6}>
+              <GridColumn width={8}>
                 {movie.path}
               </GridColumn>
               <GridColumn>
-                <MovieModal movie={movie}></MovieModal>
+                <MovieModal movie={movie} onClose={onModalClose}></MovieModal>
               </GridColumn>
             </Grid>
         </List.Description>
