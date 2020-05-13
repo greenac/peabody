@@ -129,7 +129,7 @@ const MovieModal = (props: IMovieModalProps) => {
           <GridColumn width={1}>
             <Button icon="add" onClick={addNewActor} />
           </GridColumn>
-          <GridColumn width={10}>
+          <GridColumn width={13}>
             <p>{movie.name}</p>
           </GridColumn>
           <GridColumn width={1}>

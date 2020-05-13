@@ -3,9 +3,11 @@ import logger from "../../logger/logger"
 
 export enum ApiEndpoints {
   AllActors = "/api/actor/all",
+  AllActorsWithMovies = "/api/actor/all-with-movies",
   NewActor = "/api/actor/new",
   MatchingActors = "/api/actor/match",
   OpenMovie = "/api/movie/open",
+  MoviesWithIds = "/api/movie/ids",
   UnknownMovies = "/api/movie/unknown",
   AddActorsToMovie = "/api/movie/add-actors",
 }

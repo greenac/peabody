@@ -15,7 +15,7 @@ const MovieList = (props: IMovieListProps) => {
     <List relaxed>{
       movies.map((m: IMovie) => {
       return (
-        <MovieCell movie={m} onModalClose={onModalClose}/>
+        <MovieCell key={m.id} movie={m} onModalClose={onModalClose}/>
       )
     }) }</List>
   )

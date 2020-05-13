@@ -17,7 +17,15 @@ export const apiGetAllActors = async (): Promise<IActor[]> => {
     throw new Error(`All Actors ${response.code}`)
   }
 
-  console.log("Got actors from api:", response)
+  return response.payload.actors.map((a: IActorData) => new Actor(a))
+}
+
+export const apiGetAllActorsWithMovies = async (): Promise<IActor[]> => {
+  const response = await apiGet(ApiEndpoints.AllActorsWithMovies)
+  if (response.code !== ApiResponseCodes.OK) {
+    // TODO: add comprehensive error -> ui handling
+    throw new Error(`All Actors ${response.code}`)
+  }
 
   return response.payload.actors.map((a: IActorData) => new Actor(a))
 }
