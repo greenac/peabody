@@ -4,7 +4,7 @@ class Logger {
     this.write(...a)
   }
 
-  public warning(...a: any[]): void {
+  public warn(...a: any[]): void {
     this.write("Error", ...a)
   }
 

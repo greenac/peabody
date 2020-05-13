@@ -1,18 +1,34 @@
 import React, {SyntheticEvent} from "react"
 import { IActor } from "../../models/actor"
 import { List, ListItemProps } from "semantic-ui-react"
+import logger from "../../logger/logger"
 
 interface IActorListProps {
   actors: IActor[]
   actorSelected: (actor: IActor) => void
 }
 
+interface IActorMap { [ id: string ]: IActor }
+
 const ActorList = (props: IActorListProps) => {
-  const { actors } = props
+  const { actors, actorSelected } = props
+
+  const actorMap: IActorMap = {}
+
+  for (const actor of actors) {
+    actorMap[actor.id] = actor
+  }
 
   const actorClicked = (e: SyntheticEvent, props: ListItemProps): void => {
     const { id } = props
     console.log("Actor clicked called", id)
+    const actor = actorMap[id]
+    if (!actor) {
+      logger.warn("ActorList::actorClicked no actor with id:", id)
+      return
+    }
+
+    actorSelected(actor)
   }
 
   return (

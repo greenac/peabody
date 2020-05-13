@@ -34,3 +34,8 @@ export const apiOpenMovie = async (movieId: string): Promise<boolean> => {
   const response = await apiGet(ApiEndpoints.OpenMovie, { movieId })
   return response.payload.success
 }
+
+export const apiMoviesWithIds = async (movieIds: string[]): Promise<IMovie[]> => {
+  const response = await apiPost(ApiEndpoints.MoviesWithIds, { movieIds })
+  return response.payload.movies.map((m: IMovieData) => new Movie(m))
+}

@@ -5,6 +5,7 @@ export interface IActorData {
   firstName: string
   lastName: string
   middleName: string
+  movieIds: string[]
 }
 
 export interface IActor extends IActorData {
@@ -13,10 +14,11 @@ export interface IActor extends IActorData {
 
 export class Actor implements IActor {
   public id: string
+  public identifier: string
   public firstName: string
   public lastName: string
   public middleName: string
-  public identifier: string
+  public movieIds: string[]
 
   constructor(actor: IActorData) {
     this.id = actor.id
@@ -24,6 +26,7 @@ export class Actor implements IActor {
     this.lastName = actor.lastName
     this.middleName = actor.middleName
     this.identifier = actor.identifier
+    this.movieIds = actor.movieIds
   }
 
   fullName(): string {

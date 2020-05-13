@@ -1,16 +1,22 @@
 import logger from "../../logger/logger"
 import ActorList from "./ActorList"
+import ActorMovieList from "./ActorMovieList"
 import SearchBar from "../SearchBar/SearchBar"
 import React, { useState, useEffect } from "react"
 import { IActor } from "../../models/actor"
 import {
-  apiGetAllActors,
-  apiSearchActorsWithName
+  apiGetAllActorsWithMovies,
+  apiSearchActorsWithName,
 } from "../../handlers/api/actor"
+import {
+  Grid,
+  GridColumn,
+} from "semantic-ui-react"
 
 const ActorPane = () => {
   const [ actors, setActors ] = useState<IActor[]>([])
   const [ searchText, setSearchText ] = useState("")
+  const [ movieIds, setMovieIds ] = useState<string[]>([])
 
   useEffect(() => {
     getActors().then(() => { console.log("got actors") })
@@ -33,11 +39,11 @@ const ActorPane = () => {
       acts = await apiSearchActorsWithName(text)
     } catch (error) {
       // TODO: show error to user
-      console.log("MovieModal::getActorsForName Failed to fetch actor(s) with name:", text, error)
+      logger.error("MovieModal::getActorsForName Failed to fetch actor(s) with name:", text, error)
       return
     }
 
-    console.log("Got # actors:", acts.length)
+    logger.log("Got # actors:", acts.length, "movie ids:", movieIds)
 
     setActors(acts)
   }
@@ -45,22 +51,34 @@ const ActorPane = () => {
   const getActors = async () => {
     let acts: IActor[] = []
     try {
-      acts = await apiGetAllActors()
+      acts = await apiGetAllActorsWithMovies()
     } catch (error) {
       logger.error("ActorPane::Could not get all actors. Got error", error)
     } finally {
       setActors(acts)
     }
+
+    if (acts.length > 0) {
+      setMovieIds([])
+    }
   }
 
   const actorSelected = (actor: IActor): void => {
-    console.log("Got selected actor:", actor)
+    logger.log("Got selected actor:", actor, "ids:", actor.movieIds)
+    setMovieIds(actor.movieIds)
   }
 
   return (
     <div className="actor-pane">
-      <SearchBar placeholder={"search..."} change={searchTextChanged} />
-      <ActorList actors={actors} actorSelected={actorSelected}/>
+      <SearchBar placeholder="Search..." change={searchTextChanged} />
+      <Grid columns={2}>
+        <GridColumn>
+          <ActorList actors={actors} actorSelected={actorSelected} />
+        </GridColumn>
+        <GridColumn>
+          <ActorMovieList movieIds={movieIds} />
+        </GridColumn>
+      </Grid>
     </div>
   )
 }
