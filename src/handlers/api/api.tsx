@@ -2,7 +2,7 @@ import logger from "../../logger/logger"
 
 
 export enum ApiEndpoints {
-  AllActors = "/api/actor",
+  AllActors = "/api/actor/all",
   NewActor = "/api/actor/new",
   MatchingActors = "/api/actor/match",
   OpenMovie = "/api/movie/open",

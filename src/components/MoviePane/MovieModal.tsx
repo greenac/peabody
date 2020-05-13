@@ -120,20 +120,20 @@ const MovieModal = (props: IMovieModalProps) => {
   }
 
   return (
-    <Modal trigger={<Button icon="edit" size="small"></Button>} onClose={closeModal} centered={false}>
+    <Modal trigger={<Button icon="edit" size="small" />} onClose={closeModal} centered={false}>
       <Modal.Header>
         <Grid columns={4}>
           <GridColumn width={1}>
-            <Button icon="play" onClick={openMovie}></Button>
+            <Button icon="play" onClick={openMovie} />
           </GridColumn>
-          <GridColumn>
-            <Button icon="add" onClick={addNewActor}></Button>
+          <GridColumn width={1}>
+            <Button icon="add" onClick={addNewActor} />
           </GridColumn>
           <GridColumn width={10}>
             <p>{movie.name}</p>
           </GridColumn>
           <GridColumn width={1}>
-            <Button icon="sync" onClick={handleSubmit}></Button>
+            <Button icon="sync" onClick={handleSubmit} />
           </GridColumn>
         </Grid>
       </Modal.Header>
