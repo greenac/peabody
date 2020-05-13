@@ -32,7 +32,7 @@ const MoviePane = () => {
 
   return (
     <div className="actor-pane">
-      <MovieList movies={movies} onModalClose={refreshMovies}/>
+      <MovieList movies={movies} onModalClose={refreshMovies} />
     </div>
   )
 }

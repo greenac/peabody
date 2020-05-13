@@ -1,25 +1,29 @@
-import React from "react"
-import "semantic-ui-css/semantic.min.css"
-import { List } from "semantic-ui-react"
+import React, {SyntheticEvent} from "react"
 import { IActor } from "../../models/actor"
+import { List, ListItemProps } from "semantic-ui-react"
 
 interface IActorListProps {
   actors: IActor[]
+  actorSelected: (actor: IActor) => void
 }
 
 const ActorList = (props: IActorListProps) => {
   const { actors } = props
 
+  const actorClicked = (e: SyntheticEvent, props: ListItemProps): void => {
+    const { id } = props
+    console.log("Actor clicked called", id)
+  }
+
   return (
-    <List divided relaxed>
+    <List relaxed>
       {
         actors.map((a: IActor) => {
           return (
-            <List.Item key={a.identifier}>
-              <List.Icon name='github' size='large' verticalAlign='middle' />
+            <List.Item as="a" key={a.id} id={a.id} onClick={actorClicked}>
+              <List.Icon name="user outline" size="large" verticalAlign="middle" />
               <List.Content>
-                <List.Header as='a'>{a.identifier}</List.Header>
-                <List.Description as='a'>{a.fullName()}</List.Description>
+                <List.Header>{a.fullName()}</List.Header>
               </List.Content>
             </List.Item>
           )

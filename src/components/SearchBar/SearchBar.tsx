@@ -3,14 +3,12 @@ import { Form } from "semantic-ui-react"
 
 interface ISearchBarProps {
   placeholder: string
-  children: string
   change?: (input: string) => void
-  submit?: (input: string) => void
 }
 
 const SearchBar = (props: ISearchBarProps) => {
 
-  const { placeholder, change, submit } = props
+  const { placeholder, change } = props
 
   const [ text, setText ] = useState("")
 
@@ -24,14 +22,8 @@ const SearchBar = (props: ISearchBarProps) => {
     }
   }
 
-  const didSubmit = (): void => {
-    if (submit) {
-      submit(text)
-    }
-  }
-
   return (
-    <Form onSubmit={didSubmit}>
+    <Form>
       <Form.Input
         fluid
         id='form-subcomponent-shorthand-input-first-name'

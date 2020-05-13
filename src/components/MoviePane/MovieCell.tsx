@@ -1,4 +1,4 @@
-import React, { MouseEvent } from "react"
+import React from "react"
 import { List, Grid, GridColumn } from "semantic-ui-react"
 import { IMovie } from "../../models/movie"
 import MovieModal from "./MovieModal"
@@ -22,7 +22,7 @@ const MovieCell = (props: IMovieCellProps) => {
                 {movie.path}
               </GridColumn>
               <GridColumn>
-                <MovieModal movie={movie} onClose={onModalClose}></MovieModal>
+                <MovieModal movie={movie} onClose={onModalClose} />
               </GridColumn>
             </Grid>
         </List.Description>
