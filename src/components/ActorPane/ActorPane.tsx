@@ -6,12 +6,9 @@ import React, { useState, useEffect } from "react"
 import { IActor } from "../../models/actor"
 import {
   apiGetAllActorsWithMovies,
-  apiSearchActorsWithName,
+  apiSearchActorsWithName, apiSearchActorsWithNameAndMovies,
 } from "../../handlers/api/actor"
-import {
-  Grid,
-  GridColumn,
-} from "semantic-ui-react"
+
 
 const ActorPane = () => {
   const [ actors, setActors ] = useState<IActor[]>([])
@@ -36,7 +33,7 @@ const ActorPane = () => {
   const textChanged = async (text: string): Promise<void> => {
     let acts: IActor[]
     try {
-      acts = await apiSearchActorsWithName(text)
+      acts = await apiSearchActorsWithNameAndMovies(text)
     } catch (error) {
       // TODO: show error to user
       logger.error("MovieModal::getActorsForName Failed to fetch actor(s) with name:", text, error)
@@ -71,14 +68,7 @@ const ActorPane = () => {
   return (
     <div className="actor-pane">
       <SearchBar placeholder="Search..." change={searchTextChanged} />
-      <Grid columns={2}>
-        <GridColumn>
-          <ActorList actors={actors} actorSelected={actorSelected} />
-        </GridColumn>
-        <GridColumn>
-          <ActorMovieList movieIds={movieIds} />
-        </GridColumn>
-      </Grid>
+      <ActorList actors={actors}  />
     </div>
   )
 }

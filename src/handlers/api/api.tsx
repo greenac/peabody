@@ -6,6 +6,7 @@ export enum ApiEndpoints {
   AllActorsWithMovies = "/api/actor/all-with-movies",
   NewActor = "/api/actor/new",
   MatchingActors = "/api/actor/match",
+  MatchingActorsWithMovies = "/api/actor/match-with-movies",
   OpenMovie = "/api/movie/open",
   MoviesWithIds = "/api/movie/ids",
   UnknownMovies = "/api/movie/unknown",

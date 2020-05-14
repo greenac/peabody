@@ -40,6 +40,16 @@ export const apiSearchActorsWithName = async (name: string): Promise<IActor[]> =
   return response.payload.actors.map((a: IActorData) => new Actor(a))
 }
 
+export const apiSearchActorsWithNameAndMovies = async (name: string): Promise<IActor[]> => {
+  const response = await apiGet(ApiEndpoints.MatchingActorsWithMovies, { "q": name })
+  if (response.code !== ApiResponseCodes.OK) {
+    // TODO: add comprehensive error -> ui handling
+    throw new Error(`apiSearchActorsWithName ${response.code}`)
+  }
+
+  return response.payload.actors.map((a: IActorData) => new Actor(a))
+}
+
 export const apiNewActor = async (name: string): Promise<IActor> => {
   const response = await apiPost(ApiEndpoints.NewActor, { name })
   if (response.code !== ApiResponseCodes.OK) {
