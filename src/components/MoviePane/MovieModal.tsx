@@ -1,4 +1,5 @@
 import React, { SyntheticEvent, useState } from "react"
+import logger from "../../logger/logger"
 import { IMovie } from "../../models/movie"
 import { IActor } from "../../models/actor"
 import MovieModalListItem from "./MovieModalListItem"
@@ -9,10 +10,10 @@ import {
   Form,
   List,
   Grid,
-  GridColumn
+  GridColumn, ButtonProps
 } from "semantic-ui-react"
 import {
-  apiAddActorsToMovie,
+  apiAddActorsToMovie, apiMovieDelete,
   apiOpenMovie
 } from "../../handlers/api/movie"
 import {
@@ -32,7 +33,6 @@ const MovieModal = (props: IMovieModalProps) => {
   const [ actors, setActors ] = useState<IActor[]>([])
 
   const getActorsForName = async (name: string): Promise<void> => {
-    console.log("Getting actors with name:", name)
     let acts: IActor[]
     try {
       acts = await apiSearchActorsWithName(name)
@@ -42,14 +42,11 @@ const MovieModal = (props: IMovieModalProps) => {
       return
     }
 
-    console.log("Got # actors:", acts.length)
-
     setActors(acts)
   }
 
   const handleSubmit = async (e: SyntheticEvent): Promise<void> => {
     e.preventDefault()
-    console.log("submitting names:", chosenActors)
 
     await addActorsToMovie()
   }
@@ -92,7 +89,6 @@ const MovieModal = (props: IMovieModalProps) => {
     }
 
     if (a) {
-      console.log("found selected actor", a)
       setChosenActors([ ...chosenActors, ...[ a ]])
       setActor("")
       setActors([])
@@ -107,15 +103,41 @@ const MovieModal = (props: IMovieModalProps) => {
     await apiAddActorsToMovie(movie.id, chosenActors.map(a => a.id))
   }
 
-  const closeModal = () => {
+  const closeModal = (): void => {
     onClose()
   }
 
-  const openMovie = async () => {
+  const openMovie = async (): Promise<void> => {
     try {
       await apiOpenMovie(movie.id)
     } catch (error) {
-      console.log("MovieModal::openMovie failed with error:", error)
+      logger.error("MovieModal::openMovie failed with error:", error)
+    }
+  }
+
+  const handleDelete = async (): Promise<void> => {
+    try {
+      await apiMovieDelete(movie.id)
+    } catch (error) {
+      logger.error("Failed to delete movie:", movie.id)
+    }
+  }
+
+  const handleAddedActorClicked = (e: SyntheticEvent, props: ButtonProps): void => {
+    console.log("actor clicked:", props.id)
+    let acts = [ ...chosenActors ]
+    const size = acts.length
+    for (let i=0; i < size; i++) {
+      console.log("checking actor:", acts[i].fullName())
+      if (acts[i].id === props.id) {
+        console.log("got hit:", props.id)
+        acts.splice(i, 1)
+        break
+      }
+    }
+
+    if (acts.length < size) {
+      setChosenActors(acts)
     }
   }
 
@@ -129,8 +151,11 @@ const MovieModal = (props: IMovieModalProps) => {
           <GridColumn width={1}>
             <Button icon="add" onClick={addNewActor} />
           </GridColumn>
-          <GridColumn width={13}>
+          <GridColumn width={12}>
             <p>{movie.name}</p>
+          </GridColumn>
+          <GridColumn width={1}>
+            <Button icon="delete" onClick={handleDelete} />
           </GridColumn>
           <GridColumn width={1}>
             <Button icon="sync" onClick={handleSubmit} />
@@ -142,7 +167,11 @@ const MovieModal = (props: IMovieModalProps) => {
             <List horizontal>
               {
                 chosenActors.map((actor: IActor) => {
-                  return <List.Item key={actor.id}>{actor.fullName()}</List.Item>
+                  return (
+                    <Button id={actor.id} onClick={handleAddedActorClicked}>
+                      <List.Item key={actor.id}>{actor.fullName()}</List.Item>
+                    </Button>
+                  )
                 })
               }
             </List>

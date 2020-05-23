@@ -6,11 +6,15 @@ export enum ApiEndpoints {
   AllActorsWithMovies = "/api/actor/all-with-movies",
   NewActor = "/api/actor/new",
   MatchingActors = "/api/actor/match",
+  ActorsMovies = "/api/actor/movies",
   MatchingActorsWithMovies = "/api/actor/match-with-movies",
+  SimpleMatchingActorsWithMovies = "/api/actor/simple-match-with-movies",
   OpenMovie = "/api/movie/open",
+  DeleteMovie = "/api/movie/delete",
   MoviesWithIds = "/api/movie/ids",
   UnknownMovies = "/api/movie/unknown",
   AddActorsToMovie = "/api/movie/add-actors",
+  SearchMoviesByDate = "/api/movie/search-date",
 }
 
 // TODO: add more values

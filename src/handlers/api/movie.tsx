@@ -39,3 +39,13 @@ export const apiMoviesWithIds = async (movieIds: string[]): Promise<IMovie[]> =>
   const response = await apiPost(ApiEndpoints.MoviesWithIds, { movieIds })
   return response.payload.movies.map((m: IMovieData) => new Movie(m))
 }
+
+export const apiMovieDelete = async (movieId: string): Promise<boolean> => {
+  const response = await apiGet(ApiEndpoints.DeleteMovie, { movieId })
+  return response.payload.success
+}
+
+export const apiSearchMoviesByDate = async (name: string): Promise<IMovie[]> => {
+  const response = await apiGet(ApiEndpoints.SearchMoviesByDate, { name })
+  return response.payload.data.movies.map((m: IMovieData) => new Movie(m))
+}

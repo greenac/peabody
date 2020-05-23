@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from "react"
 import { IActor } from "../../models/actor"
+import { IMovie } from "../../models/movie"
+import logger from "../../logger/logger"
+import { apiMoviesWithIds } from "../../handlers/api/movie"
 import {
   Button,
-  Modal,
-  ModalActions,
-  ModalContent,
   List,
   ListItem,
   ListIcon,
@@ -12,46 +12,50 @@ import {
 } from "semantic-ui-react"
 
 interface IActorMovieModalProps {
-  shouldOpen: boolean
   actor: IActor
   onClose: (actorId: string) => void
 }
 
 const ActorMovieModal = (props: IActorMovieModalProps) => {
-  const { shouldOpen, actor } = props
+  const { actor } = props
+  const [ movies, setMovies ] = useState<IMovie[]>([])
 
-  if (shouldOpen) {
-    console.log("ActorMovieModal shouldOpen:", shouldOpen)
-  }
-
-  const [ showModal, setShowModal ] = useState(shouldOpen)
 
   useEffect(() => {
-    setShowModal(shouldOpen)
-  }, [shouldOpen])
+    logger.log("movies use effect")
+    getMovies().then(() => logger.log("Fetched movies for actor:", actor.fullName()))
+  }, [])
 
-  const closeModal = () => {
-    console.log("closing ActorMovieModal")
-    setShowModal(false)
+  const getMovies = async () => {
+    if (actor.movieIds.length === 0) {
+      return
+    }
+
+    let mvs: IMovie[] = []
+    try {
+      mvs = await apiMoviesWithIds(actor.movieIds)
+    } catch (error) {
+      logger.error("Failed to get actor:", actor.fullName(), "movies")
+    }
+
+    setMovies(mvs)
   }
 
   return (
-    <Modal open={showModal} header={actor.fullName()} onClose={closeModal}>
-      <ModalContent>
-        <List selection={true}>
-          <ListItem>
-            <Button basic={true}>
-              <ListIcon name="film" size="large" />
-              <ListContent floated={"right"}>thing</ListContent>
-            </Button>
-          </ListItem>
-        </List>
-      </ModalContent>
-      <ModalActions>
-        <Button color="olive">Rocho, Rocho</Button>
-        <Button color="red" onClick={closeModal}>Push it good</Button>
-      </ModalActions>
-    </Modal>
+    <List selection={true}>
+      {
+        movies.map(m => {
+          return (
+            <ListItem key={m.id}>
+              <Button basic={true}>
+                <ListIcon name="film" size="large" />
+                <ListContent floated={"right"}>{m.name}</ListContent>
+              </Button>
+            </ListItem>
+          )
+        })
+      }
+    </List>
   )
 }
 
