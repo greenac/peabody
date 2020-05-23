@@ -1,3 +1,4 @@
+import { IActorData, IActor, Actor } from "./actor"
 
 export interface IMovieData {
   id: string
@@ -9,11 +10,14 @@ export interface IMovieData {
   type: string
   meta: string
   repeatNum: number
+  updated: Date
   actorIds: string[]
+  actors: IActorData[]
 }
 
 export interface IMovie extends IMovieData {
   basePath: () => string
+  getActors: () => IActor[]
 }
 
 export class Movie implements IMovie {
@@ -26,7 +30,9 @@ export class Movie implements IMovie {
   public type: string
   public meta: string
   public repeatNum: number
+  public updated: Date
   public actorIds: string[]
+  public actors: IActorData[]
 
   constructor(movie: IMovieData) {
     this.id = movie.id
@@ -38,11 +44,17 @@ export class Movie implements IMovie {
     this.type = movie.type
     this.meta = movie.meta
     this.repeatNum = movie.repeatNum
+    this.updated = movie.updated
     this.actorIds = movie.actorIds
+    this.actors = movie.actors
   }
 
   basePath(): string {
     const parts = this.path.split("/")
     return parts.slice(0, parts.length - 1).join("/")
+  }
+
+  getActors(): IActor[] {
+    return this.actors.map(a => new Actor(a))
   }
 }

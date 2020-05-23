@@ -3,7 +3,11 @@ import "./App.css"
 import "semantic-ui-css/semantic.min.css"
 import Menu from "./components/Nav/Nav"
 import ActorPane from "./components/ActorPane/ActorPane"
+import ActorMovieList from "./components/ActorPane/ActorMovieList"
 import MoviePane from "./components/MoviePane/MoviePane"
+import RecentMoviePane from "./components/RecentMovies/RecentMoviesPane"
+import "bootstrap/dist/css/bootstrap.min.css"
+
 import {
   BrowserRouter,
   Switch,
@@ -17,9 +21,11 @@ function App() {
         <div id="app-content">
           <Menu />
           <Switch>
-            <Route path="/" exact component={MoviePane} />
-            <Route path="/actors" component={ActorPane} />
-            <Route path="/movies" component={MoviePane} />
+            <Route path="/" exact component={ActorPane} />
+            <Route path="/actors" exact component={ActorPane} />
+            <Route path="/actors/movies/:actorId" component={ActorMovieList} />
+            <Route path="/movies" exact component={MoviePane} />
+            <Route path="/movies/date" exact component={RecentMoviePane} />
           </Switch>
         </div>
       </div>

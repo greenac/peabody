@@ -1,51 +1,45 @@
-import React, {SyntheticEvent} from "react"
+import React from "react"
+import ActorDropDown from "./ActorDropDown"
 import { IActor } from "../../models/actor"
-import { List, ListItemProps } from "semantic-ui-react"
-import logger from "../../logger/logger"
+import { Link } from "react-router-dom"
+import {
+  Card,
+  Button,
+} from "semantic-ui-react"
 
-interface IActorListProps {
-  actors: IActor[]
-  actorSelected: (actor: IActor) => void
-}
-
-interface IActorMap { [ id: string ]: IActor }
+interface IActorListProps { actors: IActor[] }
 
 const ActorList = (props: IActorListProps) => {
-  const { actors, actorSelected } = props
-
-  const actorMap: IActorMap = {}
-
-  for (const actor of actors) {
-    actorMap[actor.id] = actor
-  }
-
-  const actorClicked = (e: SyntheticEvent, props: ListItemProps): void => {
-    const { id } = props
-    console.log("Actor clicked called", id)
-    const actor = actorMap[id]
-    if (!actor) {
-      logger.warn("ActorList::actorClicked no actor with id:", id)
-      return
-    }
-
-    actorSelected(actor)
-  }
+  const { actors } = props
 
   return (
-    <List relaxed>
-      {
-        actors.map((a: IActor) => {
-          return (
-            <List.Item as="a" key={a.id} id={a.id} onClick={actorClicked}>
-              <List.Icon name="user outline" size="large" verticalAlign="middle" />
-              <List.Content>
-                <List.Header>{a.fullName()}</List.Header>
-              </List.Content>
-            </List.Item>
-          )
-        })
-      }
-    </List>
+    <div>
+      <Card.Group>
+        {
+          actors.map((a: IActor) => {
+            return (
+              <Card>
+                <Card.Content>
+                  <Card.Header>{a.displayName()}</Card.Header>
+                  <Card.Description>
+                    <strong>{`Number Of Movies ${a.movieIds.length}`}</strong>
+                  </Card.Description>
+                </Card.Content>
+                <Card.Content extra>
+                  <div className="ui two buttons">
+                    <Link to={`/actors/movies/${a.id}`}>
+                      <Button id={a.id} basic color="blue">
+                        Movies
+                      </Button>
+                    </Link>
+                  </div>
+                </Card.Content>
+              </Card>
+            )
+          })
+        }
+      </Card.Group>
+    </div>
   )
 }
 

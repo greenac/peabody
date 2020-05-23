@@ -21,7 +21,7 @@ const ActorMovieListCell = (props: ActorMovieListCellProps) => {
 
   return (
     <List.Item key={movie.id}>
-      <List.Icon name="film" size="large" verticalAlign="middle" />
+      <List.Icon name="film" size="huge" verticalAlign="middle" />
       <List.Content>
         <List.Header>{movie.name}</List.Header>
         <Button icon="play" id={movie.id} onClick={openMovie} />
