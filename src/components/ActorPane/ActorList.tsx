@@ -1,5 +1,5 @@
 import React from "react"
-import ActorDropDown from "./ActorDropDown"
+import moment from "moment"
 import { IActor } from "../../models/actor"
 import { Link } from "react-router-dom"
 import {
@@ -18,9 +18,12 @@ const ActorList = (props: IActorListProps) => {
         {
           actors.map((a: IActor) => {
             return (
-              <Card>
+              <Card key={a.id}>
                 <Card.Content>
                   <Card.Header>{a.displayName()}</Card.Header>
+                  <Card.Meta>
+                    {`Updated ${moment(a.updated).format("hh:mm:ss, MMMM Do YYYY")}`}
+                  </Card.Meta>
                   <Card.Description>
                     <strong>{`Number Of Movies ${a.movieIds.length}`}</strong>
                   </Card.Description>
