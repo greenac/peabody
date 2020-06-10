@@ -94,3 +94,8 @@ export const apiMoviesForActor = async (actorId: string): Promise<IMovie[]> => {
 
   return response.payload.movies.map((m: IMovieData) => new Movie(m))
 }
+
+export const apiRecentActors = async (): Promise<IActor[]> => {
+  const response = await apiGet(ApiEndpoints.RecentActors)
+  return response.payload.data.actors.map((a: IActorData) => new Actor(a))
+}

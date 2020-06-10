@@ -9,9 +9,22 @@ import {
   IMovieData,
   Movie,
 } from "../../models/movie"
+import {
+  IActor,
+  IActorData,
+  Actor,
+} from "../../models/actor"
 
-export const apiGetUnknownMovies = async (): Promise<IMovie[]> => {
-  const response = await apiGet(ApiEndpoints.UnknownMovies)
+export interface IUnknownMovieResponse {
+  movies: IMovie[]
+  page: number,
+  length: number
+  size: number
+  total: number
+}
+
+export const apiGetUnknownMovies = async (page: number): Promise<IUnknownMovieResponse> => {
+  const response = await apiGet(ApiEndpoints.UnknownMovies, { page })
   if (response.code !== ApiResponseCodes.OK) {
     // TODO: add comprehensive error -> ui handling
     throw new Error(`apiGetUnknownMovies::Failed with error ${response.payload.status}`)
@@ -19,7 +32,10 @@ export const apiGetUnknownMovies = async (): Promise<IMovie[]> => {
 
   console.log("Got unknown movies from api:", response)
 
-  return response.payload.movies.map((m: IMovieData) => new Movie(m))
+  const payload = response.payload
+  payload.movies = payload.movies.map((m: IMovieData) => new Movie(m))
+
+  return payload
 }
 
 export const apiAddActorsToMovie = async (
@@ -48,4 +64,9 @@ export const apiMovieDelete = async (movieId: string): Promise<boolean> => {
 export const apiSearchMoviesByDate = async (name: string): Promise<IMovie[]> => {
   const response = await apiGet(ApiEndpoints.SearchMoviesByDate, { name })
   return response.payload.data.movies.map((m: IMovieData) => new Movie(m))
+}
+
+export const apiActorsInMovie = async (movieId: string): Promise<IActor[]> => {
+  const response = await apiGet(ApiEndpoints.ActorsInMovie, { movieId })
+  return response.payload.data.actors.map((a: IActorData) => new Actor(a))
 }

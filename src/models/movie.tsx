@@ -46,7 +46,7 @@ export class Movie implements IMovie {
     this.repeatNum = movie.repeatNum
     this.updated = movie.updated
     this.actorIds = movie.actorIds
-    this.actors = movie.actors
+    this.actors = movie.actors || []
   }
 
   basePath(): string {

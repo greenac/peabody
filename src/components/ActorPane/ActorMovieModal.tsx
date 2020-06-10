@@ -22,7 +22,6 @@ const ActorMovieModal = (props: IActorMovieModalProps) => {
 
 
   useEffect(() => {
-    logger.log("movies use effect")
     getMovies().then(() => logger.log("Fetched movies for actor:", actor.fullName()))
   }, [])
 
