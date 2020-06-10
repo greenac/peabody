@@ -16,7 +16,7 @@ export enum ApiEndpoints {
   UnknownMovies = "/api/movie/unknown",
   AddActorsToMovie = "/api/movie/add-actors",
   SearchMoviesByDate = "/api/movie/search-date",
-  ActorsInMovie= "/api/movie/actors",
+  ActorsInMovie = "/api/movie/actors",
 }
 
 // TODO: add more values
