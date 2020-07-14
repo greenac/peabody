@@ -179,7 +179,7 @@ const MovieModal = (props: IMovieModalProps) => {
           <Form>
             <Form.Field>
               <label>Name</label>
-              <input value={actor} placeholder="Name" onInput={namesTextChanged} />
+              <input value={actor} placeholder="Name" onInput={namesTextChanged} onChange={()=>{}}/>
             </Form.Field>
           </Form>
           <List horizontal>
