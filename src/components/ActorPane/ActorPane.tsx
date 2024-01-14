@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react"
 import logger from "../../logger/logger"
 import ActorList from "./ActorList"
 import SearchBar from "../SearchBar/SearchBar"
+import InfiniteScroll from "react-infinite-scroll-component"
 import { IActor } from "../../models/actor"
-
 import {
-  apiGetAllActorsWithMovies, apiRecentActors,
+  apiRecentActors,
   apiSimpleSearchActorsWithNameAndMovies,
+  apiPaginatedActors,
+  IPaginatedActorResponse,
 } from "../../handlers/api/actor"
 
 export enum ActorPaneSortDirection {
@@ -21,9 +23,13 @@ interface IActorPaneProps {
 const ActorPane = (props: IActorPaneProps) => {
   const { sortDirection } = props
   const [ actors, setActors ] = useState<IActor[]>([])
+  const [ page, setPage ] = useState(0)
+  const [ hasMore, setHasMore ] = useState(false)
 
   useEffect(() => {
-    getActors().then(() => { console.log("got actors") })
+    if (actors.length === 0) {
+      getActors(0).then(() => { console.log("got actors") })
+    }
   }, [])
 
   const searchTextChanged = (text: string): void => {
@@ -34,9 +40,9 @@ const ActorPane = (props: IActorPaneProps) => {
     logger.log("search text changed to:", text)
 
     if (text.length === 0) {
-      getActors()
+      getActors(0).catch(e => logger.error(e))
     } else {
-      textChanged(text)
+      textChanged(text).catch(e => logger.error(e))
     }
   }
 
@@ -55,22 +61,38 @@ const ActorPane = (props: IActorPaneProps) => {
     }
   }
 
-  const getActors = async () => {
+  const getActors = async (pageToLoad: number) => {
+    console.log("getting actor for page:", pageToLoad, "page:", page, "sort direction:", sortDirection)
     let acts: IActor[] = []
     try {
       switch (sortDirection) {
         case ActorPaneSortDirection.Name:
-          acts = await apiGetAllActorsWithMovies()
+          let res: IPaginatedActorResponse
+          res = await apiPaginatedActors(pageToLoad)
+          console.log("got actor response:", res)
+          setActors([ ...actors, ...res.actors ])
+
+          if (page * res.size < res.total) {
+            setPage(pageToLoad)
+            setHasMore(true)
+          } else {
+            setHasMore(false)
+          }
           break
         case ActorPaneSortDirection.Date:
+          console.log("actor pane sorting by date")
           acts = await apiRecentActors()
+          setActors(acts)
           break
       }
     } catch (error) {
       logger.error("ActorPane::Could not get actors. Got error", error)
-    } finally {
-      setActors(acts)
     }
+  }
+
+  const loadMore = async () => {
+    console.log("loading more actors...")
+    await getActors(page + 1)
   }
 
   return (
@@ -78,7 +100,19 @@ const ActorPane = (props: IActorPaneProps) => {
       <div className="search-bar">
         <SearchBar placeholder="Search..." change={searchTextChanged} />
       </div>
-      <ActorList actors={actors} />
+      <InfiniteScroll
+        dataLength={actors.length}
+        next={loadMore}
+        hasMore={hasMore}
+        loader={<h4>Loading...</h4>}
+        endMessage={
+          <p style={{ textAlign: "center" }}>
+            <b>Yay! You have seen it all</b>
+          </p>
+        }
+      >
+        <ActorList actors={actors} />
+      </InfiniteScroll>
     </div>
   )
 }

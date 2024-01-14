@@ -7,7 +7,7 @@ import ActorMovieList from "./components/ActorPane/ActorMovieList"
 import MoviePane from "./components/MoviePane/MoviePane"
 import RecentMoviePane from "./components/RecentMovies/RecentMoviesPane"
 import "bootstrap/dist/css/bootstrap.min.css"
-
+import MovieSearchPane from "./components/MoviePane/MovieSearchPane"
 import {
   BrowserRouter,
   Switch,
@@ -27,6 +27,7 @@ function App() {
             <Route path="/actors/movies/:actorId" component={ActorMovieList} />
             <Route path="/movies" exact component={MoviePane} />
             <Route path="/movies/recent" exact component={RecentMoviePane} />
+            <Route path="/movies/search" exact component={MovieSearchPane} />
           </Switch>
         </div>
       </div>

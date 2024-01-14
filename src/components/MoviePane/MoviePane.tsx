@@ -1,9 +1,9 @@
+import React, { useState, useEffect } from "react"
 import logger from "../../logger/logger"
 import MovieList from "./MovieList"
 import InfiniteScroll from "react-infinite-scroll-component"
-import React, { useState, useEffect } from "react"
 import { IMovie } from "../../models/movie"
-import { apiGetUnknownMovies, IUnknownMovieResponse } from "../../handlers/api/movie"
+import { apiGetUnknownMovies, IPaginatedMovieResponse } from "../../handlers/api/movie"
 
 const MoviePane = () => {
   const [ movies, setMovies ] = useState<IMovie[]>([])
@@ -19,16 +19,19 @@ const MoviePane = () => {
   }, [])
 
   const getUnknownMovies = async (pageToLoad: number): Promise<void> => {
-    let res: IUnknownMovieResponse
+    let res: IPaginatedMovieResponse
     try {
       res = await apiGetUnknownMovies(pageToLoad)
       if (pageToLoad === 0) {
         setMovies(res.movies)
       } else {
+        console.log("Total number of movies fetched is:", [ ...movies, ...res.movies ].length, "for page:", pageToLoad)
         setMovies([ ...movies, ...res.movies ])
       }
 
-      if (page * res.size < res.total) {
+      console.log("got response:", res)
+
+      if (page * res.size < res.total && res.movies.length >= res.size) {
         setPage(pageToLoad)
         setHasMore(true)
       } else {
@@ -37,15 +40,23 @@ const MoviePane = () => {
     } catch (error) {
       logger.error("MoviePane::getUnknownMovies could not get unknown movies. Error", error)
     }
+  }
 
+  const handleMovieUpdated = (movie: IMovie): void => {
+    const mvs = [ ...movies ]
+    const index = mvs.findIndex(m => m.id === movie.id)
 
+    if (index !== -1) {
+      mvs[index] = movie
+      setMovies(mvs)
+    }
   }
 
   const refreshMovies = async (): Promise<void> => {
-    setPage(0)
+    setPage(page)
     setHasMore(true)
     setMovies([])
-    await getUnknownMovies(0)
+    await getUnknownMovies(page)
   }
 
   const loadMore = async (): Promise<void> => {
@@ -64,8 +75,8 @@ const MoviePane = () => {
             <b>Yay! You have seen it all</b>
           </p>
         }
-        >
-        <MovieList movies={movies} onModalClose={refreshMovies} />
+      >
+        <MovieList movies={movies} onModalClose={refreshMovies} movieUpdated={handleMovieUpdated} />
       </InfiniteScroll>
     </div>
   )
