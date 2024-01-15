@@ -64,3 +64,13 @@
 .actor-movie-button-container {
     margin: 10px 0 1px 0;
 }
+
+.actor-card-profile-pic {
+    width:100%;
+    max-width:600px;
+}
+
+.actor-list-profile-pic {
+    width:100%;
+    max-width:200px;
+}

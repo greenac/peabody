@@ -71,12 +71,14 @@ export const apiGet = async (url: string, params?: QueryParams): Promise<ApiResp
 export const apiGetImage = async (url: string, params?: QueryParams): Promise<Blob> => {
   url = makeUrl(url, params)
   let response: Response
-
   try {
     response = await fetch(url)
   } catch (error) {
-    logger.error("apiGet::Failed to get response from", url, "with error:", error)
     throw error
+  }
+
+  if (response.status !== 200) {
+    throw new Error("request returned bad status")
   }
 
   return response.blob()

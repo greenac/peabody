@@ -6,7 +6,7 @@ import { IActor } from "../../models/actor"
 import { apiGetActor, apiMoviesForActor, apiGetActorProfilePic } from "../../handlers/api/actor"
 import { RouteComponentProps } from "react-router-dom"
 import { Card  } from "semantic-ui-react"
-import {ButtonGroup, Button, Container} from "react-bootstrap"
+import {ButtonGroup, Button, Container, Row, Col, Image} from "react-bootstrap"
 
 type RouteParams = { actorId: string }
 
@@ -121,10 +121,12 @@ const ActorMovieList = ({ match }: RouteComponentProps<RouteParams>) => {
 
   return (
     <Container fluid>
-      <div className={"actor-movie-button-actor-info"}>
-        <img src={profilePic} />
-        {`${actor?.displayName()} ${actor?.movieIds.length} Movies`}
-      </div>
+      <Container fluid>
+          <Row>
+            <Col className={"actor-list-profile-pic-col"} md={2}><Image className="actor-list-profile-pic" src={profilePic} /></Col>
+            <Col>{`${actor?.displayName()} ${actor?.movieIds.length} Movies`}</Col>
+          </Row>
+      </Container>
       <div className="actor-movie-button-container">
         <ButtonGroup>
           <Button

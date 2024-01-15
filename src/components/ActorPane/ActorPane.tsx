@@ -30,7 +30,7 @@ const ActorPane = (props: IActorPaneProps) => {
     if (actors.length === 0) {
       getActors(0).then(() => { console.log("got actors") })
     }
-  }, [])
+  }, [actors])
 
   const searchTextChanged = (text: string): void => {
     if (sortDirection !== ActorPaneSortDirection.Name) {
