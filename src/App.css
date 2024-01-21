@@ -2,13 +2,8 @@
     padding: 5px;
 }
 
-nav {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    min-height: 3vh;
-    background: ghostwhite;
-    color: black;
+.nav-wrapper {
+    margin: 10px 2px 20px 2px;
 }
 
 .nav-links {
@@ -19,7 +14,63 @@ nav {
     list-style: none;
 }
 
+.nav-link:hover {
+    text-decoration: none;
+}
+
 .search-bar {
-    padding-top: 2px;
-    padding-bottom: 2px;
+    margin: 20px 2px 20px 2px;
+}
+
+.dimmed.dimmable > .ui.modals.dimmer.visible {
+    display: flex !important;
+}
+
+.actor-list-wrapper {
+    padding: 2px;
+}
+
+.movie-card-actor-name {
+    border: 1px solid rgb(49, 124, 246);
+    border-radius: 3px;
+    margin: 5px 2px 5px 2px;
+    padding: 5px;
+    color: rgb(49, 124, 246);
+}
+
+.movie-modal-actor-list-button {
+    margin: 2px;
+}
+
+.movie-modal-action-button {
+    margin: 2px;
+}
+
+.list-group .test-background {
+    background-color: aqua;
+    max-width: 100%;
+}
+
+.movie-cell-row {
+    border-bottom: 1px solid grey;
+}
+
+.actor-movie-button-actor-info {
+    margin-top: 5px;
+    font-size: large;
+    font-weight: bold;
+}
+
+.actor-movie-button-container {
+    margin: 10px 0 1px 0;
+}
+
+.actor-card-profile-pic {
+    width:100%;
+    max-width:600px;
+}
+
+.actor-list-profile-pic {
+    width:100%;
+    max-width:200px;
 }

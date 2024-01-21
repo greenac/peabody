@@ -1,12 +1,14 @@
 import logger from "../../logger/logger"
 
-
 export enum ApiEndpoints {
+  Actor = "/api/actor",
   AllActors = "/api/actor/all",
   AllActorsWithMovies = "/api/actor/all-with-movies",
   NewActor = "/api/actor/new",
   MatchingActors = "/api/actor/match",
   ActorsMovies = "/api/actor/movies",
+  ActorsPaginated = "/api/actor/paginated",
+  ActorsProfilePic = "/api/actor/profile-pic",
   MatchingActorsWithMovies = "/api/actor/match-with-movies",
   SimpleMatchingActorsWithMovies = "/api/actor/simple-match-with-movies",
   RecentActors = "/api/actor/recent",
@@ -17,6 +19,15 @@ export enum ApiEndpoints {
   AddActorsToMovie = "/api/movie/add-actors",
   SearchMoviesByDate = "/api/movie/search-date",
   ActorsInMovie = "/api/movie/actors",
+  RemoveActorFromMovie = "/api/movie/remove-actor",
+  MatchingMovies = "/api/movie/match",
+}
+
+export interface IPaginatedResponse {
+  page: number,
+  length: number
+  size: number
+  total: number
 }
 
 // TODO: add more values
@@ -55,6 +66,22 @@ export const apiGet = async (url: string, params?: QueryParams): Promise<ApiResp
   }
 
   return apiResponse
+}
+
+export const apiGetImage = async (url: string, params?: QueryParams): Promise<Blob> => {
+  url = makeUrl(url, params)
+  let response: Response
+  try {
+    response = await fetch(url)
+  } catch (error) {
+    throw error
+  }
+
+  if (response.status !== 200) {
+    throw new Error("request returned bad status")
+  }
+
+  return response.blob()
 }
 
 export const apiPost = async (url: string, payload: any): Promise<ApiResponse> => {

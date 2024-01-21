@@ -1,17 +1,14 @@
-import React, {SyntheticEvent, useEffect, useState} from "react"
+import React, { useEffect, useState} from "react"
 import MovieCard from "../MovieCard/MovieCard"
 import { IMovie } from "../../models/movie"
 import logger from "../../logger/logger"
-import { IActor } from "../../models/actor"
-
 import {
   apiSearchMoviesByDate,
-  apiOpenMovie,
 } from "../../handlers/api/movie"
 import {
   Card,
-  ButtonProps,
-} from "semantic-ui-react"
+} from "react-bootstrap"
+import {CardGroup} from "semantic-ui-react"
 
 
 const MoviesByDateCollection = () => {
@@ -32,13 +29,23 @@ const MoviesByDateCollection = () => {
     }
   }
 
+  const handleMovieUpdated = (movie: IMovie): void => {
+    const mvs = [ ...movies ]
+    const index = mvs.findIndex(m => m.id === movie.id)
+
+    if (index !== -1) {
+      mvs[index] = movie
+      setMovies(mvs)
+    }
+  }
+
   return (
     <div>
-      <Card.Group>
+      <CardGroup>
         {
-          movies.map((m: IMovie) => { return <MovieCard key={m.id} movie={m} /> })
+          movies.map((m: IMovie) => { return <MovieCard key={m.id} movie={m} movieUpdated={handleMovieUpdated} /> })
         }
-      </Card.Group>
+      </CardGroup>
     </div>
   )
 }

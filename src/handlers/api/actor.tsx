@@ -8,6 +8,8 @@ import {
   apiPost,
   ApiEndpoints,
   ApiResponseCodes,
+  IPaginatedResponse,
+  apiGetImage,
 } from "./api"
 import {
   IMovieData,
@@ -15,13 +17,18 @@ import {
   Movie,
 } from "../../models/movie"
 
+export interface IPaginatedActorResponse extends IPaginatedResponse {
+  actors: IActor[]
+}
+
 export const apiGetActor = async (actorId: string): Promise<IActor> => {
-  const response = await apiGet(ApiEndpoints.MatchingActors, { actorId })
+  const response = await apiGet(ApiEndpoints.Actor, { actorId })
   if (response.code !== ApiResponseCodes.OK) {
     // TODO: add comprehensive error -> ui handling
     throw new Error(`apiGetActor ${response.code}`)
   }
 
+  console.log("actor:", response.payload)
   return new Actor(response.payload.actor)
 }
 
@@ -98,4 +105,21 @@ export const apiMoviesForActor = async (actorId: string): Promise<IMovie[]> => {
 export const apiRecentActors = async (): Promise<IActor[]> => {
   const response = await apiGet(ApiEndpoints.RecentActors)
   return response.payload.data.actors.map((a: IActorData) => new Actor(a))
+}
+
+export const apiPaginatedActors = async (q: string, page: number): Promise<IPaginatedActorResponse> => {
+  const response = await apiGet(ApiEndpoints.ActorsPaginated, { q, page })
+  if (response.code !== ApiResponseCodes.OK) {
+    // TODO: add comprehensive error -> ui handling
+    throw new Error(`apiPaginatedActors::Failed with error ${response.payload.status}`)
+  }
+
+  const payload = response.payload
+  payload.actors = payload.actors.map((a: IActorData) => new Actor(a))
+
+  return payload
+}
+
+export const apiGetActorProfilePic = async (actorId: string): Promise<Blob> => {
+  return await apiGetImage(ApiEndpoints.ActorsProfilePic, { actorId })
 }

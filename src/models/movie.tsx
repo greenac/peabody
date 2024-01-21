@@ -44,7 +44,7 @@ export class Movie implements IMovie {
     this.type = movie.type
     this.meta = movie.meta
     this.repeatNum = movie.repeatNum
-    this.updated = movie.updated
+    this.updated = new Date(movie.updated)
     this.actorIds = movie.actorIds
     this.actors = movie.actors || []
   }

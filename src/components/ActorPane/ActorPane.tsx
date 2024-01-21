@@ -2,11 +2,13 @@ import React, { useState, useEffect } from "react"
 import logger from "../../logger/logger"
 import ActorList from "./ActorList"
 import SearchBar from "../SearchBar/SearchBar"
+import InfiniteScroll from "../InfiniteScroll/InfiniteScroll"
 import { IActor } from "../../models/actor"
-
+import { useSearchParams } from "react-router-dom"
 import {
-  apiGetAllActorsWithMovies, apiRecentActors,
-  apiSimpleSearchActorsWithNameAndMovies,
+  apiRecentActors,
+  apiPaginatedActors,
+  IPaginatedActorResponse,
 } from "../../handlers/api/actor"
 
 export enum ActorPaneSortDirection {
@@ -21,65 +23,68 @@ interface IActorPaneProps {
 const ActorPane = (props: IActorPaneProps) => {
   const { sortDirection } = props
   const [ actors, setActors ] = useState<IActor[]>([])
+  const [ searchParams, setSearchParams ] = useSearchParams()
 
   useEffect(() => {
-    getActors().then(() => { console.log("got actors") })
+    console.log("use effect with no args will look for text", getSearchParamText(), "at page:", getSearchParamPage())
+    getActors(getSearchParamText(), getSearchParamPage()).catch(e => console.log("error getting actors with blank string", e))
   }, [])
 
-  const searchTextChanged = (text: string): void => {
-    if (sortDirection !== ActorPaneSortDirection.Name) {
-      return
-    }
+  useEffect(() => {
+    console.log("use effect text changed:", getSearchParamText(), "at page:", getSearchParamPage())
+    getActors(getSearchParamText(), getSearchParamPage()).catch(e => console.log("error getting actors with blank string", e))
+  }, [ searchParams ])
 
-    logger.log("search text changed to:", text)
-
-    if (text.length === 0) {
-      getActors()
-    } else {
-      textChanged(text)
-    }
+  const textChanged = (text: string): void => {
+    setSearchParams({ q: text, page: `${0}` })
   }
 
-  const textChanged = async (text: string): Promise<void> => {
-    if (sortDirection === ActorPaneSortDirection.Name) {
-      let acts: IActor[]
-      try {
-        acts = await apiSimpleSearchActorsWithNameAndMovies(text)
-      } catch (error) {
-        // TODO: show error to user
-        logger.error("MovieModal::getActorsForName Failed to fetch actor(s) with name:", text, error)
-        return
-      }
-
-      setActors(acts)
-    }
+  const fetchNext = async (p: number): Promise<void> => {
+    setSearchParams({ q: getSearchParamText(), page: `${p}` })
   }
 
-  const getActors = async () => {
+  const getSearchParamText = (): string => {
+    return searchParams.get("q") || ""
+  }
+
+  const getSearchParamPage = (): number => {
+    return Number(searchParams.get("page")) || 0
+  }
+
+  const getActors = async (searchText: string, pageToLoad: number): Promise<void> => {
+    console.log("getting actor for page to load:", pageToLoad, "search text:", searchText)
     let acts: IActor[] = []
     try {
       switch (sortDirection) {
         case ActorPaneSortDirection.Name:
-          acts = await apiGetAllActorsWithMovies()
+          let res: IPaginatedActorResponse
+          res = await apiPaginatedActors(searchText, pageToLoad)
+          if (pageToLoad === 0) {
+            setActors([ ...res.actors ])
+          } else {
+            setActors([ ...actors, ...res.actors ])
+          }
+
           break
         case ActorPaneSortDirection.Date:
           acts = await apiRecentActors()
+          setActors(acts)
           break
       }
     } catch (error) {
       logger.error("ActorPane::Could not get actors. Got error", error)
-    } finally {
-      setActors(acts)
     }
   }
 
   return (
-    <div className="actor-pane">
-      <div className="search-bar">
-        <SearchBar placeholder="Search..." change={searchTextChanged} />
+      <div className="actor-pane">
+         <div className="search-bar">
+           <SearchBar placeholder={"Search..."} initialText={searchParams.get("q") || undefined} change={textChanged} />
+        </div>
+        <InfiniteScroll itemsPerPage={100} fetchNext={fetchNext} itemsToDisplay={actors.length}>
+          <ActorList actors={actors} />
+        </InfiniteScroll>
       </div>
-      <ActorList actors={actors} />
-    </div>
   )
 }
 
