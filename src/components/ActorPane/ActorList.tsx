@@ -15,7 +15,7 @@ const ActorList = (props: IActorListProps) => {
         {
           actors.map((a: IActor) => {
             return (
-                <ActorCard actor={a}></ActorCard>
+                <ActorCard key={`actor-card-key-${a.id}`} actor={a} />
             )
           })
         }

@@ -1,4 +1,4 @@
-import React, { SyntheticEvent, useState, useEffect } from "react"
+import React, { useState, useEffect } from "react"
 import logger from "../../logger/logger"
 import MovieModalActorList from "./MovieModalActorList"
 import { IMovie } from "../../models/movie"
@@ -41,7 +41,7 @@ const MovieModal = (props: IMovieModalProps) => {
 
   useEffect(() => {
     getActorsInMovie().catch(e => logger.error("MovieModal::useEffect failed with error:", e))
-  }, [ movie] )
+  }, [ movie ] )
 
   const getActorsInMovie = async () => {
     const actors = await apiActorsInMovie(movie.id)

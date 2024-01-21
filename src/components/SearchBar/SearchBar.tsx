@@ -1,24 +1,19 @@
-import React, {ReactPropTypes, useState} from "react"
+import React from "react"
 import { Form } from "semantic-ui-react"
 
 interface ISearchBarProps {
   placeholder: string
+  initialText?: string
   change?: (input: string) => void
 }
 
 const SearchBar = (props: ISearchBarProps) => {
 
-  const { placeholder, change } = props
-
-  const [ text, setText ] = useState("")
+  const { placeholder, change, initialText } = props
 
   const inputChanged = (event: React.ChangeEvent<HTMLInputElement>): void => {
-    const txt = event.target.value
-
-    setText(txt)
-
     if (change) {
-      change(txt)
+      change(event.target.value)
     }
   }
 
@@ -28,6 +23,7 @@ const SearchBar = (props: ISearchBarProps) => {
         fluid
         id='form-subcomponent-shorthand-input-first-name'
         placeholder={placeholder}
+        value={initialText}
         onChange={inputChanged}
       />
     </Form>

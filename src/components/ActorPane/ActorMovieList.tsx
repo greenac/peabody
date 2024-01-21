@@ -3,12 +3,21 @@ import logger from "../../logger/logger"
 import MovieCard from "../MovieCard/MovieCard"
 import { IMovie } from "../../models/movie"
 import { IActor } from "../../models/actor"
-import { apiGetActor, apiMoviesForActor, apiGetActorProfilePic } from "../../handlers/api/actor"
-import { RouteComponentProps } from "react-router-dom"
+import { useParams } from "react-router-dom"
 import { Card  } from "semantic-ui-react"
-import {ButtonGroup, Button, Container, Row, Col, Image} from "react-bootstrap"
-
-type RouteParams = { actorId: string }
+import {
+  apiGetActor,
+  apiMoviesForActor,
+  apiGetActorProfilePic,
+} from "../../handlers/api/actor"
+import {
+  ButtonGroup,
+  Button,
+  Container,
+  Row,
+  Col,
+  Image,
+} from "react-bootstrap"
 
 enum MovieSortOption {
   Name = "name",
@@ -17,19 +26,13 @@ enum MovieSortOption {
 
 let sortOption = MovieSortOption.Name
 
-const ActorMovieList = ({ match }: RouteComponentProps<RouteParams>) => {
+const ActorMovieList = () => {
 
   const [ movies, setMovies ] = useState<IMovie[]>([])
   const [ actor, setActor ] = useState<IActor>()
   const [ profilePic, setProfilePic] =  useState<string>()
-
-  useEffect(() => {
-    Promise.all([
-      getMovies(match.params.actorId),
-      getActor(match.params.actorId),
-      getProfilePic(match.params.actorId),
-    ]).catch(e => console.log("ActorMovieList::useEffect::Failed to fetch actor or movies for actor id:", match.params.actorId, e))
-  }, [] )
+  const params = useParams()
+  const actorId = params.actorId || ""
 
   const getMovies = async (actorId: string): Promise<void> => {
     let mvs: IMovie[] = []
@@ -94,7 +97,7 @@ const ActorMovieList = ({ match }: RouteComponentProps<RouteParams>) => {
 
     sortOption = MovieSortOption.Name
 
-    await getMovies(match.params.actorId)
+    await getMovies(actorId)
   }
 
   const toggleSortDate = async (): Promise<void> => {
@@ -106,7 +109,7 @@ const ActorMovieList = ({ match }: RouteComponentProps<RouteParams>) => {
 
     sortOption = MovieSortOption.Date
 
-    await getMovies(match.params.actorId)
+    await getMovies(actorId)
   }
 
   const handleMovieUpdated = (movie: IMovie): void => {
@@ -118,6 +121,14 @@ const ActorMovieList = ({ match }: RouteComponentProps<RouteParams>) => {
       setMovies(mvs)
     }
   }
+
+  useEffect(() => {
+    Promise.all([
+      getMovies(actorId),
+      getActor(actorId),
+      getProfilePic(actorId),
+    ]).catch(e => console.log("ActorMovieList::useEffect::Failed to fetch actor or movies for actor id:", actorId, e))
+  }, [ actorId ] )
 
   return (
     <Container fluid>

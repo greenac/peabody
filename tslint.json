@@ -14,7 +14,8 @@
       "severity": "warning",
       "options": ["debug", "info", "log", "time", "timeEnd", "trace"]
     },
-    "semi": [2, "never"]
+    "semi": [2, "never"],
+    "no-use-before-define": "off"
   },
   "jsRules": {
     "max-line-length": {

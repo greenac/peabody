@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react"
 import logger from "../../logger/logger"
 import ActorList from "./ActorList"
 import SearchBar from "../SearchBar/SearchBar"
-import InfiniteScroll from "react-infinite-scroll-component"
+import InfiniteScroll from "../InfiniteScroll/InfiniteScroll"
 import { IActor } from "../../models/actor"
+import { useSearchParams } from "react-router-dom"
 import {
   apiRecentActors,
-  apiSimpleSearchActorsWithNameAndMovies,
   apiPaginatedActors,
   IPaginatedActorResponse,
 } from "../../handlers/api/actor"
@@ -23,64 +23,50 @@ interface IActorPaneProps {
 const ActorPane = (props: IActorPaneProps) => {
   const { sortDirection } = props
   const [ actors, setActors ] = useState<IActor[]>([])
-  const [ page, setPage ] = useState(0)
-  const [ hasMore, setHasMore ] = useState(false)
+  const [ searchParams, setSearchParams ] = useSearchParams()
 
   useEffect(() => {
-    if (actors.length === 0) {
-      getActors(0).then(() => { console.log("got actors") })
-    }
-  }, [actors])
+    console.log("use effect with no args will look for text", getSearchParamText(), "at page:", getSearchParamPage())
+    getActors(getSearchParamText(), getSearchParamPage()).catch(e => console.log("error getting actors with blank string", e))
+  }, [])
 
-  const searchTextChanged = (text: string): void => {
-    if (sortDirection !== ActorPaneSortDirection.Name) {
-      return
-    }
+  useEffect(() => {
+    console.log("use effect text changed:", getSearchParamText(), "at page:", getSearchParamPage())
+    getActors(getSearchParamText(), getSearchParamPage()).catch(e => console.log("error getting actors with blank string", e))
+  }, [ searchParams ])
 
-    logger.log("search text changed to:", text)
-
-    if (text.length === 0) {
-      getActors(0).catch(e => logger.error(e))
-    } else {
-      textChanged(text).catch(e => logger.error(e))
-    }
+  const textChanged = (text: string): void => {
+    setSearchParams({ q: text, page: `${0}` })
   }
 
-  const textChanged = async (text: string): Promise<void> => {
-    if (sortDirection === ActorPaneSortDirection.Name) {
-      let acts: IActor[]
-      try {
-        acts = await apiSimpleSearchActorsWithNameAndMovies(text)
-      } catch (error) {
-        // TODO: show error to user
-        logger.error("MovieModal::getActorsForName Failed to fetch actor(s) with name:", text, error)
-        return
-      }
-
-      setActors(acts)
-    }
+  const fetchNext = async (p: number): Promise<void> => {
+    setSearchParams({ q: getSearchParamText(), page: `${p}` })
   }
 
-  const getActors = async (pageToLoad: number) => {
-    console.log("getting actor for page:", pageToLoad, "page:", page, "sort direction:", sortDirection)
+  const getSearchParamText = (): string => {
+    return searchParams.get("q") || ""
+  }
+
+  const getSearchParamPage = (): number => {
+    return Number(searchParams.get("page")) || 0
+  }
+
+  const getActors = async (searchText: string, pageToLoad: number): Promise<void> => {
+    console.log("getting actor for page to load:", pageToLoad, "search text:", searchText)
     let acts: IActor[] = []
     try {
       switch (sortDirection) {
         case ActorPaneSortDirection.Name:
           let res: IPaginatedActorResponse
-          res = await apiPaginatedActors(pageToLoad)
-          console.log("got actor response:", res)
-          setActors([ ...actors, ...res.actors ])
-
-          if (page * res.size < res.total) {
-            setPage(pageToLoad)
-            setHasMore(true)
+          res = await apiPaginatedActors(searchText, pageToLoad)
+          if (pageToLoad === 0) {
+            setActors([ ...res.actors ])
           } else {
-            setHasMore(false)
+            setActors([ ...actors, ...res.actors ])
           }
+
           break
         case ActorPaneSortDirection.Date:
-          console.log("actor pane sorting by date")
           acts = await apiRecentActors()
           setActors(acts)
           break
@@ -90,30 +76,15 @@ const ActorPane = (props: IActorPaneProps) => {
     }
   }
 
-  const loadMore = async () => {
-    console.log("loading more actors...")
-    await getActors(page + 1)
-  }
-
   return (
-    <div className="actor-pane">
-      <div className="search-bar">
-        <SearchBar placeholder="Search..." change={searchTextChanged} />
+      <div className="actor-pane">
+         <div className="search-bar">
+           <SearchBar placeholder={"Search..."} initialText={searchParams.get("q") || undefined} change={textChanged} />
+        </div>
+        <InfiniteScroll itemsPerPage={100} fetchNext={fetchNext} itemsToDisplay={actors.length}>
+          <ActorList actors={actors} />
+        </InfiniteScroll>
       </div>
-      <InfiniteScroll
-        dataLength={actors.length}
-        next={loadMore}
-        hasMore={hasMore}
-        loader={<h4>Loading...</h4>}
-        endMessage={
-          <p style={{ textAlign: "center" }}>
-            <b>Yay! You have seen it all</b>
-          </p>
-        }
-      >
-        <ActorList actors={actors} />
-      </InfiniteScroll>
-    </div>
   )
 }
 

@@ -14,9 +14,10 @@ const MovieModalActorList = ({ actors, onClick }: MovieModalActorListProps) => {
         actors.map(actor => {
           return (
             <Button
-              variant={"outline-primary"}
-              className={"movie-modal-actor-list-button"}
-              onClick={() => onClick(actor.id)}
+                key={`movie-modal-actor-list-button-${actor.id}`}
+                variant={"outline-primary"}
+                className={"movie-modal-actor-list-button"}
+                onClick={() => onClick(actor.id)}
             >
               {actor.fullName()}
             </Button>

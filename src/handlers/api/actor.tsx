@@ -8,7 +8,8 @@ import {
   apiPost,
   ApiEndpoints,
   ApiResponseCodes,
-  IPaginatedResponse, apiGetImage,
+  IPaginatedResponse,
+  apiGetImage,
 } from "./api"
 import {
   IMovieData,
@@ -106,8 +107,8 @@ export const apiRecentActors = async (): Promise<IActor[]> => {
   return response.payload.data.actors.map((a: IActorData) => new Actor(a))
 }
 
-export const apiPaginatedActors = async (page: number): Promise<IPaginatedActorResponse> => {
-  const response = await apiGet(ApiEndpoints.ActorsPaginated, { page })
+export const apiPaginatedActors = async (q: string, page: number): Promise<IPaginatedActorResponse> => {
+  const response = await apiGet(ApiEndpoints.ActorsPaginated, { q, page })
   if (response.code !== ApiResponseCodes.OK) {
     // TODO: add comprehensive error -> ui handling
     throw new Error(`apiPaginatedActors::Failed with error ${response.payload.status}`)

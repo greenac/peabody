@@ -11,12 +11,12 @@ const MoviePane = () => {
   const [ hasMore, setHasMore ] = useState(false)
 
   useEffect(() => {
-    getUnknownMovies(0)
+    getUnknownMovies(page)
       .catch(error => {
         logger.error("Failed to get unknown movies with error:", error)
         setMovies([])
       })
-  }, [])
+  }, [page])
 
   const getUnknownMovies = async (pageToLoad: number): Promise<void> => {
     let res: IPaginatedMovieResponse

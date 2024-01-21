@@ -13,32 +13,24 @@ const MovieSearchPane = () => {
   const [hasMore, setHasMore] = useState(false)
   const [searchValue, setSearchValue] = useState("")
 
-  useEffect(() => {
-    getMovies("", 0)
-      .catch(error => {
-        logger.error("Failed to get unknown movies with error:", error)
-        setMovies([])
-      })
-  }, [])
-
   const searchTextChanged = (text: string): void => {
     logger.log("search text changed to:", text)
     getMovies(text, page).catch(e => logger.error(e))
   }
 
-  const textChanged = async (text: string): Promise<void> => {
-    let res: IPaginatedMovieResponse
-    try {
-      res = await apiSearchMoviesWithName(text, page)
-    } catch (error) {
-      // TODO: show error to user
-      logger.error("MovieModal::getActorsForName Failed to fetch actor(s) with name:", text, error)
-      return
-    }
-
-    setSearchValue(text)
-    setMovies(res.movies)
-  }
+  // const textChanged = async (text: string): Promise<void> => {
+  //   let res: IPaginatedMovieResponse
+  //   try {
+  //     res = await apiSearchMoviesWithName(text, page)
+  //   } catch (error) {
+  //     // TODO: show error to user
+  //     logger.error("MovieModal::getActorsForName Failed to fetch actor(s) with name:", text, error)
+  //     return
+  //   }
+  //
+  //   setSearchValue(text)
+  //   setMovies(res.movies)
+  // }
 
   const getMovies = async (searchText: string, pageToLoad: number): Promise<void> => {
     let res: IPaginatedMovieResponse
@@ -90,10 +82,18 @@ const MovieSearchPane = () => {
     await getMovies(searchValue, page + 1)
   }
 
+  useEffect(() => {
+    getMovies("", 0)
+        .catch(error => {
+          logger.error("Failed to get unknown movies with error:", error)
+          setMovies([])
+        })
+  }, [getMovies])
+
   return (
     <div className="actor-pane">
       <div className="search-bar">
-        <SearchBar placeholder="Search..." change={searchTextChanged}/>
+        <SearchBar placeholder="Search..." initialText={""} change={searchTextChanged}/>
       </div>
       <InfiniteScroll
         dataLength={movies.length}

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react"
 import moment from "moment"
 import { IActor } from "../../models/actor"
 import { Card, Button, Container, Row, Col, Image } from "react-bootstrap"
-import {apiGetActorProfilePic} from "../../handlers/api/actor"
+import { apiGetActorProfilePic } from "../../handlers/api/actor"
 import { Link } from "react-router-dom"
 import defaultProfilePic from "../../images/default-profile-pic.gif"
 
@@ -17,7 +17,6 @@ const ActorCard = (props: IActorCardProps) => {
     const [ profilePic, setProfilePic] =  useState<string>()
 
     useEffect(() => {
-        console.log("get profile pic hit for actor:", actor.displayName())
         getProfilePic(actor.id).catch(e => console.log("ActorCard->failed to get profile pic with error:", e))
     }, [ actor ])
 
