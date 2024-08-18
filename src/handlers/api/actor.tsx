@@ -107,8 +107,8 @@ export const apiRecentActors = async (): Promise<IActor[]> => {
   return response.payload.data.actors.map((a: IActorData) => new Actor(a))
 }
 
-export const apiPaginatedActors = async (q: string, page: number): Promise<IPaginatedActorResponse> => {
-  const response = await apiGet(ApiEndpoints.ActorsPaginated, { q, page })
+export const apiPaginatedActors = async (query: string, page: number, type: string): Promise<IPaginatedActorResponse> => {
+  const response = await apiGet(ApiEndpoints.ActorsPaginated, { q: query, p: page, t: type })
   if (response.code !== ApiResponseCodes.OK) {
     // TODO: add comprehensive error -> ui handling
     throw new Error(`apiPaginatedActors::Failed with error ${response.payload.status}`)
