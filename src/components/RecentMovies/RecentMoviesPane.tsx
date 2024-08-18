@@ -1,14 +1,9 @@
 import React, { useEffect, useState} from "react"
+import logger from "../../logger/logger"
 import MovieCard from "../MovieCard/MovieCard"
 import { IMovie } from "../../models/movie"
-import logger from "../../logger/logger"
-import {
-  apiSearchMoviesByDate,
-} from "../../handlers/api/movie"
-import {
-  Card,
-} from "react-bootstrap"
-import {CardGroup} from "semantic-ui-react"
+import { CardGroup } from "semantic-ui-react"
+import { apiSearchMoviesByDate } from "../../handlers/api/movie"
 
 
 const MoviesByDateCollection = () => {

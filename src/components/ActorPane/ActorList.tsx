@@ -1,4 +1,4 @@
-import React from "react"
+import React, {useEffect} from "react"
 import { IActor } from "../../models/actor"
 import { CardGroup } from "semantic-ui-react"
 import ActorCard from "../ActorCard/ActorCard"
@@ -9,6 +9,10 @@ interface IActorListProps {
 
 const ActorList = (props: IActorListProps) => {
   const { actors } = props
+
+  useEffect(() => {
+    console.log("debug: actor list got number of actors to render:", actors.length)
+  }, [actors])
 
   return (
     <CardGroup>

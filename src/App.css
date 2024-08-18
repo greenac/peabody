@@ -74,3 +74,7 @@
     width:100%;
     max-width:200px;
 }
+
+.alphabet-search-button-wrapper {
+    padding: 3px;
+}

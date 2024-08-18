@@ -33,6 +33,7 @@ const MovieSearchPane = () => {
   // }
 
   const getMovies = async (searchText: string, pageToLoad: number): Promise<void> => {
+    console.log("searching movies with text:", searchText, "page to load:", pageToLoad)
     let res: IPaginatedMovieResponse
     try {
       res = await apiSearchMoviesWithName(searchText, pageToLoad)
@@ -83,17 +84,17 @@ const MovieSearchPane = () => {
   }
 
   useEffect(() => {
-    getMovies("", 0)
+    getMovies(searchValue, 0)
         .catch(error => {
           logger.error("Failed to get unknown movies with error:", error)
           setMovies([])
         })
-  }, [getMovies])
+  }, [searchValue])
 
   return (
     <div className="actor-pane">
       <div className="search-bar">
-        <SearchBar placeholder="Search..." initialText={""} change={searchTextChanged}/>
+        <SearchBar placeholder="Search..." initialText={searchValue} change={searchTextChanged}/>
       </div>
       <InfiniteScroll
         dataLength={movies.length}

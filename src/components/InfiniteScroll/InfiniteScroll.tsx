@@ -2,20 +2,23 @@ import React, { useState, useEffect, PropsWithChildren } from "react"
 import { Container } from "react-bootstrap"
 
 export interface IInfiniteScrollProps {
+    page: number
     itemsToDisplay: number
     itemsPerPage: number
     fetchNext: (page: number) => Promise<void>
 }
 
 const InfiniteScroll = (props: PropsWithChildren<IInfiniteScrollProps>) => {
-    const { fetchNext, itemsToDisplay } = props
-    const [ page, setPage ] = useState(0)
+    const { fetchNext, itemsToDisplay, page } = props
 
     useEffect(() => {
-        console.log("InfiniteScroll useEffect called")
+        console.log("debug: InfiniteScroll useEffect called for page:", page)
         fetchNext(page).catch(e => console.log("InfiniteScroll->failed to fetch page with error:", e))
         window.addEventListener("scroll", handleScroll)
-        return () => window.removeEventListener("scroll", handleScroll)
+        return () => {
+            console.log("removing scroll listener")
+            window.removeEventListener("scroll", handleScroll)
+        }
     }, [ page ])
 
     const handleScroll = () => {
@@ -26,14 +29,19 @@ const InfiniteScroll = (props: PropsWithChildren<IInfiniteScrollProps>) => {
 
         if (document.scrollingElement?.scrollHeight! - document.scrollingElement?.scrollTop! === document.scrollingElement?.clientHeight!) {
             console.log("at bottom of page")
-            setPage(page + 1)
+            fetchNext(page+1)
+            return
         }
+        //
+        // console.log("scroll height:", document.scrollingElement?.scrollHeight!)
+        // console.log("scroll top:", document.scrollingElement?.scrollTop!)
+        // console.log("left:", document.scrollingElement?.scrollHeight! - document.scrollingElement?.scrollTop!)
+        // console.log("right:", document.scrollingElement?.clientHeight!)
     }
 
     return (
         <Container>
             { props.children }
-            <h1>Total Items {itemsToDisplay}</h1>
         </Container>
     )
 }
