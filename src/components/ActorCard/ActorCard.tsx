@@ -34,10 +34,7 @@ const ActorCard = (props: IActorCardProps) => {
             return
         }
 
-        const buf = await blob.arrayBuffer()
-
-        saveActorPicToLocalStorage(actorId, Buffer.from(buf))
-
+        saveActorPicToLocalStorage(actorId, blob)
         setProfilePic(URL.createObjectURL(blob))
     }
 
@@ -47,16 +44,29 @@ const ActorCard = (props: IActorCardProps) => {
             return undefined
         }
 
-        return new Blob([ Buffer.from(picBase64, 'base64') ])
+        const byteArray = Uint8Array.from(
+            atob(picBase64)
+                .split('')
+                .map(char => char.charCodeAt(0))
+        )
+        return new Blob([ byteArray ])
+
+        //return new Blob([ Buffer.from(picBase64, 'base64') ])
     }
 
-    const saveActorPicToLocalStorage= (actorId: string, data: Buffer): void => {
-        try {
-            localStorage.setItem(makeLocalStorageActorKey(actorId), data.toString("base64"))
-        } catch (e) {
-            localStorage.clear()
-            saveActorPicToLocalStorage(actorId, data)
+    const saveActorPicToLocalStorage= (actorId: string, blob: Blob): void => {
+        const reader = new FileReader()
+        reader.readAsDataURL(blob)
+        reader.onloadend = function() {
+            const base64Data = reader.result as string
+            try {
+                localStorage.setItem(makeLocalStorageActorKey(actorId), base64Data.split(';base64,')[1])
+            } catch (e) {
+                localStorage.clear()
+                saveActorPicToLocalStorage(actorId, blob)
+            }
         }
+
     }
 
     const makeLocalStorageActorKey = (actorId: string): string => {
