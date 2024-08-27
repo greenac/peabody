@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import logger from "../../logger/logger"
-import MovieCard from "../MovieCard/MovieCard"
+import MovieCard from "../../components/MovieCard/MovieCard"
 import { IMovie } from "../../models/movie"
 import { IActor } from "../../models/actor"
 import { useParams } from "react-router-dom"

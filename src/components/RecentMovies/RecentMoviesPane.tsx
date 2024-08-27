@@ -2,7 +2,7 @@ import React, { useEffect, useState} from "react"
 import logger from "../../logger/logger"
 import MovieCard from "../MovieCard/MovieCard"
 import { IMovie } from "../../models/movie"
-import { CardGroup } from "semantic-ui-react"
+import { Card } from "semantic-ui-react"
 import { apiSearchMoviesByDate } from "../../handlers/api/movie"
 
 
@@ -36,11 +36,11 @@ const MoviesByDateCollection = () => {
 
   return (
     <div>
-      <CardGroup>
+      <Card.Group>
         {
           movies.map((m: IMovie) => { return <MovieCard key={m.id} movie={m} movieUpdated={handleMovieUpdated} /> })
         }
-      </CardGroup>
+      </Card.Group>
     </div>
   )
 }

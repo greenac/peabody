@@ -1,6 +1,6 @@
 import React, {useEffect} from "react"
 import { IActor } from "../../models/actor"
-import { CardGroup } from "semantic-ui-react"
+import { Card } from "semantic-ui-react"
 import ActorCard from "../ActorCard/ActorCard"
 
 interface IActorListProps {
@@ -15,7 +15,7 @@ const ActorList = (props: IActorListProps) => {
   }, [actors])
 
   return (
-    <CardGroup>
+    <Card.Group>
         {
           actors.map((a: IActor) => {
             return (
@@ -23,7 +23,7 @@ const ActorList = (props: IActorListProps) => {
             )
           })
         }
-    </CardGroup>
+    </Card.Group>
   )
 }
 
